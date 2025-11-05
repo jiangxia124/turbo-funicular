@@ -1,0 +1,1905 @@
+
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>贵州大学美食节众筹企划 - 金融思维框架</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#8b5cf6',
+            success: '#10b981',
+            warning: '#f59e0b',
+            danger: '#ef4444',
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .backdrop-blur-sm {
+        backdrop-filter: blur(4px);
+      }
+      .text-shadow {
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      .transition-transform {
+        transition-property: transform;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
+      }
+      .hover-scale {
+        @apply hover:scale-105 transition-all duration-300;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-inter">
+  <!-- 滚动进度条 -->
+  <div id="scrollProgress" class="fixed top-0 left-0 h-1 bg-blue-600 z-50 transition-all duration-300" style="width: 0%"></div>
+  
+  <!-- 头部区域 -->
+  <header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 px-4 md:px-8">
+    <div class="max-w-6xl mx-auto">
+      <div class="animate-fade-in">
+        <h1 class="text-3xl md:text-5xl font-bold mb-2">以金融思维打造校园美食盛宴</h1>
+        <p class="text-xl md:text-2xl opacity-90 mb-1">贵州大学美食节众筹企划</p>
+        <p class="text-lg md:text-xl opacity-80 mb-1">课程 :AI+数字金融</p>
+        <p class="text-lg md:text-xl opacity-80 mb-8">分享人名字：姜佶颖</p>
+        
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          <div class="w-full md:w-1/2">
+            <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6">
+              <div class="flex flex-col items-center mb-4">
+                <div class="text-4xl md:text-5xl font-bold">
+                  ¥0
+                </div>
+                <div class="text-sm opacity-90">已筹金额 / 目标 ¥100,000</div>
+              </div>
+              
+              <div class="w-full bg-white bg-opacity-30 rounded-full h-3 mb-4">
+                <div class="bg-yellow-400 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+              </div>
+              
+              <div class="grid grid-cols-3 gap-2 mb-6">
+                <div class="text-center">
+                  <div class="text-lg font-bold">种子轮</div>
+                  <div class="text-sm opacity-80">¥0 / ¥20,000</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-lg font-bold">成长轮</div>
+                  <div class="text-sm opacity-80">¥0 / ¥50,000</div>
+                </div>
+                <div class="text-center">
+                  <div class="text-lg font-bold">扩展轮</div>
+                  <div class="text-sm opacity-80">¥0 / ¥30,000</div>
+                </div>
+              </div>
+              
+              <!-- 投资回报计算器 -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-xl font-bold mb-4">投资回报计算器</h3>
+                
+                <div class="mb-4">
+                  <label for="investment" class="block text-sm font-medium text-gray-700 mb-1">
+                    输入投资金额(元)
+                  </label>
+                  <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">¥</span>
+                    <input
+                      type="number"
+                      id="investment"
+                      class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="请输入投资金额"
+                      min="0"
+                      step="1"
+                      oninput="calculateReturn()"
+                    />
+                  </div>
+                </div>
+                
+                <div id="returnResult" class="hidden bg-blue-50 p-4 rounded-lg mb-4">
+                  <h4 class="font-semibold text-blue-800 mb-2">
+                    您将获得 <span id="selectedTierAmount">0</span> 元档回报
+                  </h4>
+                  
+                  <!-- 收益组合分析 -->
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                    <div class="bg-white p-3 rounded-lg shadow-sm">
+                      <div class="text-xs text-gray-500">美食券价值</div>
+                      <div id="foodCouponValue" class="text-lg font-bold text-blue-700">¥0</div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm">
+                      <div class="text-xs text-gray-500">优先体验权</div>
+                      <div id="priorityExperience" class="text-lg font-bold text-blue-700"></div>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm">
+                      <div class="text-xs text-gray-500">定制纪念品</div>
+                      <div id="souvenir" class="text-lg font-bold text-blue-700"></div>
+                    </div>
+                  </div>
+                  
+                  <!-- 预计收益率 -->
+                  <div class="bg-white p-3 rounded-lg shadow-sm mb-4">
+                    <div class="flex justify-between items-center">
+                      <div class="text-sm text-gray-600">预计总收益率</div>
+                      <div id="totalReturnRate" class="text-xl font-bold text-green-600">0%</div>
+                    </div>
+                  </div>
+                  
+                  <ul id="rewardsList" class="space-y-2"></ul>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                  <button onclick="setInvestment(80)" class="py-2 px-3 border border-gray-300 rounded-lg transition-colors text-gray-700 hover:bg-gray-50">
+                    ¥80
+                  </button>
+                  <button onclick="setInvestment(200)" class="py-2 px-3 border border-gray-300 rounded-lg transition-colors text-gray-700 hover:bg-gray-50">
+                    ¥200
+                  </button>
+                  <button onclick="setInvestment(500)" class="py-2 px-3 border border-gray-300 rounded-lg transition-colors text-gray-700 hover:bg-gray-50">
+                    ¥500
+                  </button>
+                  <button onclick="setInvestment(1000)" class="py-2 px-3 border border-gray-300 rounded-lg transition-colors text-gray-700 hover:bg-gray-50">
+                    ¥1000
+                  </button>
+                </div>
+                
+                <button onclick="supportProject()" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+                  立即支持
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="w-full md:w-1/2">
+            <div class="relative h-64 md:h-80">
+              <canvas id="costBreakdownChart"></canvas>
+              <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                <div class="text-white font-bold text-lg">资金分配</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <!-- 主要内容区域 -->
+  <main class="max-w-6xl mx-auto px-4 md:px-8 py-12">
+      <!-- 零资金启动方案 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-dollar-sign mr-2"></i> 零资金启动方案
+      </h2>
+      
+      <!-- 众筹方案设计 -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">1</span>
+          众筹方案设计
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- 众筹方案1 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-2">校内师生小额众筹</h4>
+            <p class="text-sm text-gray-500 mb-3">目标受众: 贵州大学全体师生</p>
+            <p class="text-gray-600 mb-4">面向校内师生的小额众筹计划，设置多个参与档位，降低参与门槛</p>
+            
+            <div class="mb-4">
+              <h5 class="font-semibold mb-2 text-sm">参与档位:</h5>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥10</span>
+                  <span class="text-sm text-gray-600">美食节体验券1张 + 纪念徽章</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥20</span>
+                  <span class="text-sm text-gray-600">美食节体验券2张 + 纪念T恤</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥30</span>
+                  <span class="text-sm text-gray-600">美食节体验券3张 + 定制纪念品</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥50</span>
+                  <span class="text-sm text-gray-600">美食节VIP体验券1张 + 全套纪念品</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium">预期筹集: ¥30,000</span>
+              <span class="text-xs text-gray-500">占总目标: 30.0%</span>
+            </div>
+          </div>
+          
+          <!-- 众筹方案2 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-2">周边商家赞助合作</h4>
+            <p class="text-sm text-gray-500 mb-3">目标受众: 贵州大学周边餐饮及相关商家</p>
+            <p class="text-gray-600 mb-4">邀请周边商家以不同形式参与赞助，获取品牌曝光和商业机会</p>
+            
+            <div class="mb-4">
+              <h5 class="font-semibold mb-2 text-sm">参与档位:</h5>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥2,000</span>
+                  <span class="text-sm text-gray-600">标准展位1个 + 活动宣传物料展示</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥5,000</span>
+                  <span class="text-sm text-gray-600">优质展位1个 + 活动独家合作商资格</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥10,000</span>
+                  <span class="text-sm text-gray-600">黄金展位1个 + 活动冠名权 + 线上线下全方位宣传</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium">预期筹集: ¥40,000</span>
+              <span class="text-xs text-gray-500">占总目标: 40.0%</span>
+            </div>
+          </div>
+          
+          <!-- 众筹方案3 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-2">校友情怀捐赠计划</h4>
+            <p class="text-sm text-gray-500 mb-3">目标受众: 贵州大学校友</p>
+            <p class="text-gray-600 mb-4">面向广大校友发起的情怀捐赠计划，唤起校友对母校的情感共鸣</p>
+            
+            <div class="mb-4">
+              <h5 class="font-semibold mb-2 text-sm">参与档位:</h5>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥100</span>
+                  <span class="text-sm text-gray-600">校友纪念卡 + 活动电子纪念册</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥500</span>
+                  <span class="text-sm text-gray-600">校友荣誉墙展示 + 优先参与权</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥1,000</span>
+                  <span class="text-sm text-gray-600">校友年度活动通行证 + 专属纪念品</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium">预期筹集: ¥20,000</span>
+              <span class="text-xs text-gray-500">占总目标: 20.0%</span>
+            </div>
+          </div>
+          
+          <!-- 众筹方案4 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-2">线上线下结合筹款</h4>
+            <p class="text-sm text-gray-500 mb-3">目标受众: 社会各界爱心人士</p>
+            <p class="text-gray-600 mb-4">结合线上平台和线下活动，扩大筹款范围和影响力</p>
+            
+            <div class="mb-4">
+              <h5 class="font-semibold mb-2 text-sm">参与档位:</h5>
+              <div class="space-y-2">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥50</span>
+                  <span class="text-sm text-gray-600">电子感谢卡 + 活动直播权限</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥100</span>
+                  <span class="text-sm text-gray-600">定制纪念品 + 活动照片集</span>
+                </div>
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg">
+                  <span class="text-sm">¥200</span>
+                  <span class="text-sm text-gray-600">VIP线上互动 + 线下体验优先权</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-sm font-medium">预期筹集: ¥10,000</span>
+              <span class="text-xs text-gray-500">占总目标: 10.0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 资源盘点与整合 -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">2</span>
+          资源盘点与整合
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- 校方支持 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-4">校方支持</h4>
+            <ul class="space-y-4">
+              <li>
+                <div class="font-medium mb-1">场地提供</div>
+                <p class="text-sm text-gray-600">争取学校免费提供体育馆或操场作为活动场地</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">宣传渠道</div>
+                <p class="text-sm text-gray-600">利用学校官方公众号、广播台、校内LED屏等宣传资源</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">物资支持</div>
+                <p class="text-sm text-gray-600">申请学校提供桌椅、音响设备等基础物资</p>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 学生组织协作 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-4">学生组织协作</h4>
+            <ul class="space-y-4">
+              <li>
+                <div class="font-medium mb-1">学生会合作</div>
+                <p class="text-sm text-gray-600">与学生会合作，利用其组织资源和影响力</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">社团联合宣传</div>
+                <p class="text-sm text-gray-600">联合各学生社团进行活动宣传和推广</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">志愿者招募</div>
+                <p class="text-sm text-gray-600">招募学生志愿者参与活动组织和执行</p>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 闲置资源盘活 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <h4 class="text-lg font-bold mb-4">闲置资源盘活</h4>
+            <ul class="space-y-4">
+              <li>
+                <div class="font-medium mb-1">旧物置换</div>
+                <p class="text-sm text-gray-600">组织旧物置换活动，筹集活动物资</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">技能交换</div>
+                <p class="text-sm text-gray-600">组织有特长的学生以技能换取活动参与机会</p>
+              </li>
+              <li>
+                <div class="font-medium mb-1">校企合作</div>
+                <p class="text-sm text-gray-600">与企业合作，获取闲置设备和物资支持</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 分阶段执行计划 -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">3</span>
+          分阶段执行计划
+        </h3>
+        
+        <div class="space-y-6">
+          <!-- 前期预热阶段 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <div class="flex flex-col md:flex-row md:items-center mb-4">
+              <div class="flex items-center mb-2 md:mb-0">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                  1
+                </div>
+                <h4 class="text-lg font-bold">前期预热阶段</h4>
+              </div>
+              <div class="md:ml-auto flex items-center">
+                <i class="fas fa-clock text-gray-500 mr-2"></i>
+                <span class="text-sm text-gray-500">0-15天</span>
+                <div class="mx-4 h-4 border-r border-gray-200"></div>
+                <i class="fas fa-dollar-sign text-green-500 mr-2"></i>
+                <span class="font-medium">目标: ¥10,000</span>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">阶段目标</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">完成众筹方案设计和物料准备</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">建立线上众筹平台和宣传渠道</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">启动校内宣传，招募志愿者团队</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">联系首批合作商家和校友代表</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">核心活动</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">召开动员大会，组建核心团队</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">设计并制作宣传物料和众筹页面</span>
+                  </li>
+                  <li class="flex items-start"><i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">在校内开展预热宣传活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">拜访重点商家和校友</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 集中筹款阶段 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <div class="flex flex-col md:flex-row md:items-center mb-4">
+              <div class="flex items-center mb-2 md:mb-0">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                  2
+                </div>
+                <h4 class="text-lg font-bold">集中筹款阶段</h4>
+              </div>
+              <div class="md:ml-auto flex items-center">
+                <i class="fas fa-clock text-gray-500 mr-2"></i>
+                <span class="text-sm text-gray-500">16-30天</span>
+                <div class="mx-4 h-4 border-r border-gray-200"></div>
+                <i class="fas fa-dollar-sign text-green-500 mr-2"></i>
+                <span class="font-medium">目标: ¥80,000</span>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">阶段目标</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">全面启动线上线下众筹活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">完成80%的筹款目标</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">确定所有合作商家和赞助方</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">扩大活动影响力和参与度</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">核心活动</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">举办线下路演和推广活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">开展社交媒体宣传和互动活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">组织校友专场宣传活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">推出限时优惠和特别奖励</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 收尾阶段 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+            <div class="flex flex-col md:flex-row md:items-center mb-4">
+              <div class="flex items-center mb-2 md:mb-0">
+                <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                  3
+                </div>
+                <h4 class="text-lg font-bold">收尾阶段</h4>
+              </div>
+              <div class="md:ml-auto flex items-center">
+                <i class="fas fa-clock text-gray-500 mr-2"></i>
+                <span class="text-sm text-gray-500">31-40天</span>
+                <div class="mx-4 h-4 border-r border-gray-200"></div>
+                <i class="fas fa-dollar-sign text-green-500 mr-2"></i>
+                <span class="font-medium">目标: ¥10,000</span>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">阶段目标</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">完成所有筹款目标</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">确认所有资金和物资到位</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">整理和确认支持者信息</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">准备活动执行细节</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h5 class="font-semibold mb-3 text-gray-700">核心活动</h5>
+                <ul class="space-y-2">
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">开展最后冲刺宣传活动</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">确认所有赞助和合作细节</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">统计和整理筹款数据</span>
+                  </li>
+                  <li class="flex items-start">
+                    <i class="fas fa-arrow-right text-blue-500 mt-1 mr-2 flex-shrink-0"></i>
+                    <span class="text-gray-600">准备回报发放计划</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 风险预案与备选方案 -->
+      <div>
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">4</span>
+          风险预案与备选方案
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- 最差情况 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-red-500 hover-scale">
+            <h4 class="text-lg font-bold mb-2">最差情况</h4>
+            <p class="text-sm text-gray-500 mb-3">筹款不足50%</p>
+            <h5 class="font-semibold mb-2">活动规模动态调整</h5>
+            <ul class="space-y-2">
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">缩减活动场地和参与人数</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">减少活动环节和演出内容</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">降低物资采购标准和数量</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">优化人员配置，增加志愿者比例</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 一般情况 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-yellow-500 hover-scale">
+            <h4 class="text-lg font-bold mb-2">一般情况</h4>
+            <p class="text-sm text-gray-500 mb-3">筹款达到50%-80%</p>
+            <h5 class="font-semibold mb-2">低成本替代方案</h5>
+            <ul class="space-y-2">
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-yellow-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">寻找更多免费或低成本场地</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-yellow-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">增加校企合作，获取物资赞助</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-yellow-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">简化活动流程，提高执行效率</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-yellow-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">调整活动内容，突出核心价值</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 理想情况 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-green-500 hover-scale">
+            <h4 class="text-lg font-bold mb-2">理想情况</h4>
+            <p class="text-sm text-gray-500 mb-3">筹款达到80%-100%</p>
+            <h5 class="font-semibold mb-2">多方合作资源再开发</h5>
+            <ul class="space-y-2">
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">拓展更多合作渠道和赞助机会</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">增加活动亮点和特色内容</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">提升参与者体验和回报价值</span>
+              </li>
+              <li class="flex items-start text-sm">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-600">为下一届活动积累资源和经验</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 金融化运营框架 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-dollar-sign mr-2"></i> 美食节金融化运营框架
+      </h2>
+      
+      <!-- 双轨制美食项目体系 -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">1</span>
+          "双轨制"美食项目体系
+        </h3>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- 稳健型项目 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                <i class="fas fa-shield-alt text-lg"></i>
+              </div>
+              <h4 class="text-lg font-bold">稳健型项目 (60%资金)</h4>
+            </div>
+            <p class="text-gray-600 mb-4">传统美食摊位，低风险固定回报模式，适合风险偏好较低的投资者。</p>
+            
+            <div class="space-y-3">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>贵州特色小吃集合</span>
+                <span class="font-medium">固定回报10%</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>少数民族美食体验</span>
+                <span class="font-medium">固定回报12%</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>经典黔菜传承</span>
+                <span class="font-medium">固定回报11%</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>校园美食回忆</span>
+                <span class="font-medium">固定回报9%</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 创新型项目 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-purple-500">
+            <div class="flex items-center mb-4">
+              <div class="w-10 h-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
+                <i class="fas fa-rocket text-lg"></i>
+              </div>
+              <h4 class="text-lg font-bold">创新型项目 (40%资金)</h4>
+            </div>
+            <p class="text-gray-600 mb-4">创意融合美食，高风险高回报模式，适合风险偏好较高的投资者。</p>
+            
+            <div class="space-y-3">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>创新美食研发</span>
+                <span class="font-medium">浮动回报15%-25%</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>美食文化论坛</span>
+                <span class="font-medium">浮动回报12%-20%</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                <span>国际美食融合</span>
+                <span class="font-medium">浮动回报18%-30%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 投资回报计算器 -->
+      <div class="mb-10">
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">2</span>
+          投资回报计算器
+        </h3>
+        <!-- 投资回报计算器内容已在头部展示 -->
+      </div>
+      
+      <!-- 三级风险防控体系 -->
+      <div>
+        <h3 class="text-xl font-bold mb-6 flex items-center">
+          <span class="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center mr-2 text-sm">3</span>
+          三级风险防控体系
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- 一级防控 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 hover-scale">
+            <h4 class="text-lg font-bold mb-3">一级防控: 项目筛选机制</h4>
+            <p class="text-gray-600 mb-4">建立严格的项目筛选标准和流程，确保所有项目具备可行性和盈利能力</p>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">制定详细的项目评估指标体系</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">组建专业评审委员会</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">进行项目可行性研究</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">建立项目淘汰机制</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 二级防控 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 hover-scale">
+            <h4 class="text-lg font-bold mb-3">二级防控: 资金监管流程</h4>
+            <p class="text-gray-600 mb-4">实施严格的资金监管措施，确保资金安全和合理使用</p>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">设立专用账户，专款专用</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">制定详细的资金使用计划</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">建立资金使用审批制度</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">定期公开资金使用情况</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">引入第三方审计机构</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 三级防控 -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 hover-scale">
+            <h4 class="text-lg font-bold mb-3">三级防控: 应急预案设计</h4>
+            <p class="text-gray-600 mb-4">针对可能出现的风险，制定全面的应急预案</p>
+            <ul class="space-y-2">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">识别潜在风险点</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">制定详细的应急处置流程</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">建立应急响应机制</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">定期进行应急演练</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+                <span class="text-gray-700 text-sm">准备应急资金储备</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 美食项目展示 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-heart mr-2"></i> 美食项目详情
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 项目1 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
+              稳健型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Guizhou%20local%20snacks%2C%20colorful%20street%20food%2C%20spicy%20dishes%2C%20traditional%20Chinese%20food%20festival&sign=56647430f5399f59b1e2e5d4a702ed48')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">贵州特色小吃集合</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">汇集贵州各地特色小吃，展示贵州饮食文化</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 低
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                固定回报10%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 项目2 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
+              稳健型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Ethnic%20minority%20food%20in%20Guizhou%2C%20traditional%20cooking%20methods%2C%20colorful%20cultural%20experience%2C%20food%20festival&sign=1164b3e5281df68afbde6867abab891d')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">少数民族美食体验</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">体验贵州少数民族特色美食，感受民族文化魅力</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 低
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                固定回报12%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 项目3 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500 text-white">
+              创新型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Food%20innovation%20research%20and%20development%2C%20chef%20creating%20new%20dishes%2C%20culinary%20experiment%2C%20food%20festival&sign=61f62254f8696c261d48a1cce182a5b6')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">创新美食研发</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">鼓励学生创新研发新型美食，培养创业精神</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 高
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                浮动回报15%-25%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 项目4 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500 text-white">
+              创新型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Food%20culture%20forum%2C%20experts%20discussing%20cuisine%20heritage%2C%20academic%20exchange%2C%20food%20festival&sign=a190d83c61d47156e5d22e715106fc10')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">美食文化论坛</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">举办美食文化论坛，探讨美食与文化的关系</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 高
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                浮动回报12%-20%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 项目5 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
+              稳健型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Traditional%20Guizhou%20cuisine%2C%20classic%20dishes%2C%20culinary%20art%2C%20food%20festival&sign=7c54b5432c22f8caa6c7d58ac2a779d6')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">经典黔菜传承</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">展示贵州传统名菜，传承经典烹饪技艺</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 低
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                固定回报11%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 项目6 -->
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover-scale relative">
+          <!-- 项目类型标签 -->
+          <div class="absolute top-3 right-3 z-10">
+            <span class="px-3 py-1 rounded-full text-xs font-bold bg-blue-500 text-white">
+              稳健型
+            </span>
+          </div>
+          
+          <div class="h-48 bg-cover bg-center cursor-pointer" style="background-image: url('https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=Campus%20food%2C%20student%20canteen%20memories%2C%20nostalgic%20food%20festival&sign=fc90a0a2670cf2bb8229ae954f33061d')"></div>
+          <div class="p-5">
+            <h3 class="text-xl font-bold mb-2">校园美食回忆</h3>
+            <p class="text-gray-600 mb-4 line-clamp-2">重现校园经典美食，唤起青春回忆</p>
+            
+            <!-- 风险和回报信息 -->
+            <div class="flex justify-between mb-3 text-sm">
+              <span class="px-2 py-1 bg-yellow-50 text-yellow-700 rounded-full">
+                风险: 低
+              </span>
+              <span class="px-2 py-1 bg-green-50 text-green-700 rounded-full">
+                固定回报9%
+              </span>
+            </div>
+            
+            <div class="mb-3">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">已筹: ¥0</span>
+                <span class="font-medium">0.0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <button class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+              查看详情
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 数据可视化 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-chart-line mr-2"></i> 众筹数据
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold mb-4">众筹趋势</h3>
+          <div class="h-80 flex items-center justify-center">
+            <canvas id="crowdfundingTrendChart"></canvas>
+            <div class="absolute text-center text-gray-500">
+              <p>众筹活动尚未开始，请持续关注</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold mb-4">众筹健康度指标</h3>
+          <div class="space-y-6">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">参与率</span>
+                <span class="font-medium">0%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-green-500 h-3 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">平均投资金额</span><span class="font-medium">¥0</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-blue-500 h-3 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">传播系数</span>
+                <span class="font-medium">0</span>
+              </div><div class="w-full bg-gray-200 rounded-full h-3">
+                <div class="bg-purple-500 h-3 rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 风险评估 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-exclamation-triangle mr-2"></i> 风险评估
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 市场风险 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500 hover-scale">
+          <h3 class="text-xl font-bold mb-3">市场风险</h3>
+          <p class="text-gray-600 mb-4">市场需求不确定，参与人数可能低于预期</p>
+          <ul class="space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">提前进行市场调研，了解潜在参与者需求</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">加大宣传力度，覆盖更多目标人群</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">灵活调整活动内容，根据反馈及时优化</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 运营风险 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500 hover-scale">
+          <h3 class="text-xl font-bold mb-3">运营风险</h3>
+          <p class="text-gray-600 mb-4">活动组织复杂度高，可能出现协调问题</p>
+          <ul class="space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">成立专门的执行团队，明确分工</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">制定详细的活动流程和应急预案</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">提前进行演练，确保各环节衔接顺畅</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 财务风险 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-red-500 hover-scale">
+          <h3 class="text-xl font-bold mb-3">财务风险</h3>
+          <p class="text-gray-600 mb-4">成本控制难度大，可能出现超支风险</p>
+          <ul class="space-y-2">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">制定详细的预算计划，严格控制支出</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">建立成本预警机制，定期评估财务状况</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-green-500 mt-1 mr-2 flex-shrink-0"></i>
+              <span class="text-gray-700">寻找赞助商合作，降低资金压力</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 成功案例 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-award mr-2"></i> 成功案例
+      </h2>
+      
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-xl shadow-lg overflow-hidden">
+          <thead class="bg-blue-600 text-white">
+            <tr>
+              <th class="py-3 px-4 text-left">活动名称</th>
+              <th class="py-3 px-4 text-left">年份</th>
+              <th class="py-3 px-4 text-right">目标金额</th>
+              <th class="py-3 px-4 text-right">筹集金额</th>
+              <th class="py-3 px-4 text-right">完成率</th>
+              <th class="py-3 px-4 text-right">投资回报率</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bg-gray-50">
+              <td class="py-3 px-4">北京大学美食节</td>
+              <td class="py-3 px-4">2024</td>
+              <td class="py-3 px-4 text-right">¥80,000</td>
+              <td class="py-3 px-4 text-right">¥95,000</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">118.75%</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">22.5%</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="py-3 px-4">清华大学文化节</td>
+              <td class="py-3 px-4">2024</td>
+              <td class="py-3 px-4 text-right">¥120,000</td>
+              <td class="py-3 px-4 text-right">¥138,000</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">115%</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">18.3%</td>
+            </tr>
+            <tr class="bg-gray-50">
+              <td class="py-3 px-4">复旦大学艺术节</td>
+              <td class="py-3 px-4">2023</td>
+              <td class="py-3 px-4 text-right">¥90,000</td>
+              <td class="py-3 px-4 text-right">¥102,000</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">113.33%</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">20.1%</td>
+            </tr>
+            <tr class="bg-white">
+              <td class="py-3 px-4">浙江大学科技展</td>
+              <td class="py-3 px-4">2023</td>
+              <td class="py-3 px-4 text-right">¥150,000</td>
+              <td class="py-3 px-4 text-right">¥178,000</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">118.67%</td>
+              <td class="py-3 px-4 text-right text-green-600 font-medium">25.2%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    
+    <!-- 目标金额测算依据 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-dollar-sign mr-2"></i> 目标金额测算依据
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold mb-4">成本明细</h3>
+          <div class="space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">场地租赁</div>
+                <div class="text-xs text-gray-500">学校体育馆3天租金</div>
+              </div>
+              <div class="font-bold">¥20,000</div>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">场地布置</div>
+                <div class="text-xs text-gray-500">舞台搭建、装饰材料等</div>
+              </div>
+              <div class="font-bold">¥10,000</div>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">食材采购</div>
+                <div class="text-xs text-gray-500">预计50个摊位，每个摊位500元食材</div>
+              </div>
+              <div class="font-bold">¥25,000</div>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">宣传推广</div>
+                <div class="text-xs text-gray-500">线上线下宣传、物料制作等</div>
+              </div>
+              <div class="font-bold">¥15,000</div>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">人力成本</div>
+                <div class="text-xs text-gray-500">工作人员、志愿者补贴等</div>
+              </div>
+              <div class="font-bold">¥15,000</div>
+            </div>
+            <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+              <div>
+                <div class="font-medium">应急储备金</div>
+                <div class="text-xs text-gray-500">应对突发情况的备用资金</div>
+              </div>
+              <div class="font-bold">¥15,000</div>
+            </div>
+            <div class="flex justify-between items-center pt-2 font-bold text-lg">
+              <div>总计</div>
+              <div>¥100,000</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold mb-4">预期数据</h3>
+          <div class="space-y-4">
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">预期参与人数</span>
+                <span class="font-medium">5,000</span>
+              </div>
+              <div class="text-xs text-gray-500">学校师生加上周边社区居民</div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">平均投资金额</span>
+                <span class="font-medium">¥200</span>
+              </div>
+              <div class="text-xs text-gray-500">参考同类活动数据</div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">预计收入</span>
+                <span class="font-medium">¥100,000</span>
+              </div>
+              <div class="text-xs text-gray-500">参与人数×平均投资金额</div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">预计支出</span>
+                <span class="font-medium">¥100,000</span>
+              </div>
+              <div class="text-xs text-gray-500">各项成本总和</div>
+            </div>
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="font-medium">预计利润率</span>
+                <span class="font-medium">0%</span>
+              </div>
+              <div class="text-xs text-gray-500">公益性质，不追求利润</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 金融服务中心 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-credit-card mr-2"></i> 金融服务中心
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 微型信贷支持 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+          <h3 class="text-xl font-bold mb-2">微型信贷支持</h3>
+          <p class="text-gray-600 mb-4">为美食摊主提供小额融资方案，帮助解决资金周转问题</p>
+          <p class="text-sm text-gray-500">提供最高5000元的小额信贷，期限3个月，年利率6%，无需抵押担保，仅需提供经营计划和身份证明。</p>
+        </div>
+        
+        <!-- 预售与预订系统 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+          <h3 class="text-xl font-bold mb-2">预售与预订系统</h3>
+          <p class="text-gray-600 mb-4">帮助摊主提前锁定未来收入流，降低经营风险</p>
+          <p class="text-sm text-gray-500">建立线上预售平台，顾客可以提前购买美食券或预订特色美食，摊主可以根据预售情况安排生产和采购。</p>
+        </div>
+        
+        <!-- 电子支付解决方案 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+          <h3 class="text-xl font-bold mb-2">电子支付解决方案</h3>
+          <p class="text-gray-600 mb-4">整合多种支付渠道，提供便捷的支付体验</p>
+          <p class="text-sm text-gray-500">提供微信支付、支付宝、校园卡等多种支付方式，支持扫码支付和线上支付，同时提供统一的结算服务。</p>
+        </div>
+        
+        <!-- 财务透明化公示 -->
+        <div class="bg-white rounded-xl shadow-lg p-6 hover-scale">
+          <h3 class="text-xl font-bold mb-2">财务透明化公示</h3>
+          <p class="text-gray-600 mb-4">定期更新资金使用报告，确保财务透明</p>
+          <p class="text-sm text-gray-500">建立财务公示平台，每周更新资金筹集和使用情况，接受公众监督，确保每一笔资金都得到合理使用。</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 金融知识小课堂 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-book-open mr-2"></i> 金融知识小课堂
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- 众筹 -->
+          <div class="p-4 border border-gray-100 rounded-lg hover:border-blue-300 transition-colors hover-scale">
+            <h3 class="font-bold text-blue-700 mb-1">众筹</h3>
+            <p class="text-gray-600 text-sm">众筹是指通过互联网平台向公众募集资金，用于支持各种创业项目或活动的一种融资方式。</p>
+          </div>
+          
+          <!-- 风险投资 -->
+          <div class="p-4 border border-gray-100 rounded-lg hover:border-blue-300 transition-colors hover-scale">
+            <h3 class="font-bold text-blue-700 mb-1">风险投资</h3>
+            <p class="text-gray-600 text-sm">风险投资是指向初创企业提供资金支持并取得该公司股份的一种融资方式。</p>
+          </div>
+          
+          <!-- ROI -->
+          <div class="p-4 border border-gray-100 rounded-lg hover:border-blue-300 transition-colors hover-scale">
+            <h3 class="font-bold text-blue-700 mb-1">ROI</h3>
+            <p class="text-gray-600 text-sm">ROI（Return on Investment）即投资回报率，是指投资收益与投资成本的比率，用于评估投资效益。</p>
+          </div>
+          
+          <!-- 现金流 -->
+          <div class="p-4 border border-gray-100 rounded-lg hover:border-blue-300 transition-colors hover-scale">
+            <h3 class="font-bold text-blue-700 mb-1">现金流</h3>
+            <p class="text-gray-600 text-sm">现金流是指企业在一定会计期间按照现金收付实现制，通过一定经济活动（包括经营活动、投资活动、筹资活动和非经常性项目）而产生的现金流入、现金流出及其总量情况的总称。</p>
+          </div>
+          
+          <!-- 风险评估 -->
+          <div class="p-4 border border-gray-100 rounded-lg hover:border-blue-300 transition-colors hover-scale">
+            <h3 class="font-bold text-blue-700 mb-1">风险评估</h3>
+            <p class="text-gray-600 text-sm">风险评估是指在风险事件发生之前或之后（但还没有结束），该事件给人们的生活、生命、财产等各个方面造成的影响和损失的可能性进行量化评估的工作。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 支持者名单 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-users mr-2"></i> 支持者名单
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <div class="text-center py-10 text-gray-500">
+          <p>目前暂无支持者，成为第一个支持者吧！</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- FAQ区域 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-shield-alt mr-2"></i> 常见问题
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6">
+        <!-- FAQ 项目1 -->
+        <div class="border-b border-gray-200">
+          <button onclick="toggleFaq(0)" class="flex justify-between items-center w-full py-4 px-1 text-left font-medium text-gray-900 focus:outline-none">
+            <span>众筹参与资格与流程说明</span>
+            <i id="faqIcon0" class="fas fa-chevron-down"></i>
+          </button>
+          <div id="faqContent0" class="overflow-hidden h-0">
+            <div class="pb-4 px-1 text-gray-600">所有贵州大学师生、校友以及关注贵州大学的社会人士均可参与众筹。参与流程：1. 浏览项目详情；2. 选择支持金额；3. 填写个人信息；4. 完成支付；5. 等待回报兑现。</div>
+          </div>
+        </div>
+        
+        <!-- FAQ 项目2 -->
+        <div class="border-b border-gray-200">
+          <button onclick="toggleFaq(1)" class="flex justify-between items-center w-full py-4 px-1 text-left font-medium text-gray-900 focus:outline-none">
+            <span>资金安全保障措施详解</span>
+            <i id="faqIcon1" class="fas fa-chevron-down"></i>
+          </button>
+          <div id="faqContent1" class="overflow-hidden h-0">
+            <div class="pb-4 px-1 text-gray-600">我们采取多重措施保障资金安全：1. 所有资金进入学校专用账户；2. 定期公开资金使用情况；3. 成立监督委员会；4. 与第三方支付平台合作，确保交易安全。</div>
+          </div>
+        </div>
+        
+        <!-- FAQ 项目3 -->
+        <div class="border-b border-gray-200">
+          <button onclick="toggleFaq(2)" class="flex justify-between items-center w-full py-4 px-1 text-left font-medium text-gray-900 focus:outline-none">
+            <span>回报兑现机制与时间表</span>
+            <i id="faqIcon2" class="fas fa-chevron-down"></i>
+          </button>
+          <div id="faqContent2" class="overflow-hidden h-0">
+            <div class="pb-4 px-1 text-gray-600">众筹成功后，我们将按照以下时间表兑现回报：1. 美食节开始前一周发放电子凭证；2. 美食节现场发放实物回报；3. 特殊回报（如冠名权）在活动期间落实。</div>
+          </div>
+        </div>
+        
+        <!-- FAQ 项目4 -->
+        <div class="border-b border-gray-200">
+          <button onclick="toggleFaq(3)" class="flex justify-between items-center w-full py-4 px-1 text-left font-medium text-gray-900 focus:outline-none">
+            <span>退款政策与条件说明</span>
+            <i id="faqIcon3" class="fas fa-chevron-down"></i>
+          </button>
+          <div id="faqContent3" class="overflow-hidden h-0">
+            <div class="pb-4 px-1 text-gray-600">在众筹结束前，支持者可以申请全额退款。众筹成功后，如因不可抗力导致活动取消，将全额退款；如活动正常举办，原则上不予退款，但可以转让支持权益。</div>
+          </div>
+        </div>
+        
+        <!-- FAQ 项目5 -->
+        <div class="border-b border-gray-200">
+          <button onclick="toggleFaq(4)" class="flex justify-between items-center w-full py-4 px-1 text-left font-medium text-gray-900 focus:outline-none">
+            <span>税务相关问题解答</span>
+            <i id="faqIcon4" class="fas fa-chevron-down"></i>
+          </button>
+          <div id="faqContent4" class="overflow-hidden h-0">
+            <div class="pb-4 px-1 text-gray-600">所有众筹金额均为税前金额，如涉及个人所得税，由支持者自行承担。我们将提供正规收据，用于相关税务处理。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 社交媒体分享 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-share-alt mr-2"></i> 分享活动
+      </h2>
+      
+      <div class="bg-white rounded-xl shadow-lg p-6 text-center">
+        <p class="mb-6 text-gray-600">
+          请分享本活动给您的朋友，一起参与贵州大学美食节众筹！
+        </p>
+        
+        <div class="flex justify-center space-x-4 mb-6">
+          <button class="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white hover:bg-blue-600 transition-colors">
+            <i class="fab fa-weixin text-xl"></i>
+          </button>
+          <button class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 transition-colors">
+            <i class="fab fa-weibo text-xl"></i>
+          </button>
+          <button class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white hover:bg-green-600 transition-colors">
+            <i class="fab fa-qq text-xl"></i>
+          </button><button class="w-12 h-12 rounded-full bg-blue-700 flex items-center justify-center text-white hover:bg-blue-800 transition-colors">
+            <i class="fas fa-link text-xl"></i>
+          </button>
+        </div>
+        
+        <div class="flex flex-col items-center">
+          <div class="w-32 h-32 bg-gray-200 rounded-lg mb-3 flex items-center justify-center">
+            <span class="text-gray-500 text-sm">二维码</span>
+          </div>
+          <p class="text-sm text-gray-500">扫描二维码分享活动</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 众筹大使招募 -->
+    <section class="mb-16">
+      <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">
+        <i class="fas fa-users mr-2"></i> 众筹大使招募
+      </h2>
+      
+      <div class="bg-gradient-to-r from-blue-500 to-blue-700 rounded-xl shadow-lg p-8 text-white">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 class="text-xl font-bold mb-4">成为众筹大使，获得额外奖励！</h3>
+            <p class="mb-6 opacity-90">
+              我们正在招募众筹大使，帮助我们宣传美食节众筹活动。作为众筹大使，您将获得额外的推广奖励和优先参与权。
+            </p>
+            <ul class="space-y-3 mb-6">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-yellow-400 mt-1 mr-2 flex-shrink-0"></i>
+                <span>每成功推荐一位支持者，可获得其支持金额5%的奖励</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-yellow-400 mt-1 mr-2 flex-shrink-0"></i>
+                <span>推荐支持者累计达到10人，可获得VIP体验资格</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-yellow-400 mt-1 mr-2 flex-shrink-0"></i>
+                <span>推荐金额累计达到5000元，可获得与主办方共同策划下一届活动的机会</span>
+              </li>
+            </ul>
+            <button class="bg-white text-blue-600 font-bold py-2 px-6 rounded-lg hover:bg-gray-100 transition-colors flex items-center">
+              立即申请 <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+          </div>
+          
+          <div class="flex justify-center">
+            <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-xl p-6 max-w-xs w-full">
+              <h4 class="text-lg font-bold mb-4 text-center">大使申请表</h4>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm mb-1">姓名</label>
+                  <input type="text" class="w-full px-3 py-2 bg-white bg-opacity-30 border border-white border-opacity-30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-white placeholder-white placeholder-opacity-50" placeholder="请输入姓名" />
+                </div>
+                <div>
+                  <label class="block text-sm mb-1">联系方式</label>
+                  <input type="tel" class="w-full px-3 py-2 bg-white bg-opacity-30 border border-white border-opacity-30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-white placeholder-white placeholder-opacity-50" placeholder="请输入手机号码" />
+                </div>
+                <div>
+                  <label class="block text-sm mb-1">电子邮箱</label>
+                  <input type="email" class="w-full px-3 py-2 bg-white bg-opacity-30 border border-white border-opacity-30 rounded-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 text-white placeholder-white placeholder-opacity-50" placeholder="请输入电子邮箱" />
+                </div>
+                <button class="w-full bg-yellow-400 text-blue-900 font-bold py-2 px-4 rounded-lg hover:bg-yellow-500 transition-colors">
+                  提交申请
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 底部行动号召 -->
+    <section class="text-center">
+      <h2 class="text-2xl md:text-3xl font-bold mb-6">
+        立即参与贵州大学美食节众筹！
+      </h2>
+      <p class="text-gray-600 mb-8 max-w-2xl mx-auto">
+        美食节将于12月4日举办，目前我们正在紧张筹备中。您的每一份支持，都将帮助我们打造一场难忘的美食盛宴，展示贵州饮食文化的魅力。
+        让我们一起用金融思维，共创校园美食文化新体验！
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg">
+          立即支持
+        </button>
+        <button class="bg-white hover:bg-gray-50 text-blue-600 font-bold py-3 px-8 rounded-lg transition-colors text-lg border border-blue-600">
+          了解更多
+        </button>
+      </div>
+    </section>
+  </main>
+  
+  <!-- 页脚区域 -->
+  <footer class="bg-gray-900 text-white py-12 px-4 md:px-8 mt-16">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">贵州大学美食节</h3>
+          <p class="text-gray-400">
+            以金融思维打造的校园美食文化盛宴，将于12月4日举办，展示贵州饮食文化魅力。
+          </p>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-4">快速链接</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-white transition-colors">关于我们</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">项目详情</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">常见问题</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">联系我们</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-4">联系方式</h3>
+          <ul class="space-y-2 text-gray-400">
+            <li>贵州大学</li>
+            <li>电话：0851-12345678</li>
+            <li>邮箱：foodfest@guizhou.edu.cn</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h3 class="text-lg font-bold mb-4">关注我们</h3>
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 transition-colors">
+              <i class="fab fa-weixin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 transition-colors">
+              <i class="fab fa-weibo"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-green-600 transition-colors">
+              <i class="fab fa-qq"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500 text-sm">
+        <p>&copy; 2025 贵州大学美食节众筹项目. 保留所有权利.</p>
+      </div>
+    </div>
+  </footer>
+  
+  <!-- JavaScript -->
+  <script>
+    // 滚动进度条
+    window.addEventListener('scroll', function() {
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const currentScroll = window.scrollY;
+      const progress = (currentScroll / totalScroll) * 100;
+      document.getElementById('scrollProgress').style.width = progress + '%';
+    });
+    
+    // 成本分配饼图
+    const costBreakdownCtx = document.getElementById('costBreakdownChart').getContext('2d');
+    const costBreakdownChart = new Chart(costBreakdownCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['场地租赁与布置', '食材采购', '宣传推广', '人力成本', '应急储备金'],
+        datasets: [{
+          data: [30, 25, 15, 15, 15],
+          backgroundColor: [
+            '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'
+          ],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              color: 'white',
+              font: {
+                size: 12
+              }
+            }
+          }
+        },
+        cutout: '50%'
+      }
+    });
+    
+    // 众筹趋势图表
+    const crowdfundingTrendCtx = document.getElementById('crowdfundingTrendChart').getContext('2d');
+    const crowdfundingTrendChart = new Chart(crowdfundingTrendCtx, {
+      type: 'line',
+      data: {
+        labels: ['11月1日', '11月10日', '11月20日', '11月30日', '12月1日'],
+        datasets: [{
+          label: '筹集金额',
+          data: [0, 0, 0, 0, 0],
+          borderColor: '#8884d8',
+          backgroundColor: 'rgba(136, 132, 216, 0.1)',
+          tension: 0.4,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return '¥' + value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    });
+    
+    // FAQ 切换
+    function toggleFaq(index) {
+      const content = document.getElementById(`faqContent${index}`);
+      const icon = document.getElementById(`faqIcon${index}`);
+      
+      if (content.style.height === 'auto' || content.style.height === '') {
+        content.style.height = '0';
+        icon.classList.remove('fa-chevron-up');
+        icon.classList.add('fa-chevron-down');
+      } else {
+        content.style.height = 'auto';
+        icon.classList.remove('fa-chevron-down');
+        icon.classList.add('fa-chevron-up');
+      }
+    }
+    
+    // 投资回报计算器
+    const returnTiers = [
+      {
+        amount: 80,
+        rewards: [
+          '价值100元的美食节通用券',
+          '美食节纪念徽章一枚',
+          '电子纪念证书'
+        ],
+        foodCouponValue: 100,
+        priorityExperience: '普通体验',
+        souvenir: '纪念徽章'
+      },
+      {
+        amount: 200,
+        rewards: [
+          '价值250元的美食节通用券',
+          'VIP体验资格（提前入场1小时）',
+          '美食节定制T恤一件',
+          '与厨师交流机会'
+        ],
+        foodCouponValue: 250,
+        priorityExperience: '提前入场1小时',
+        souvenir: '定制T恤'
+      },
+      {
+        amount: 500,
+        rewards: [
+          '价值650元的美食节通用券',
+          '超级VIP体验（专属休息区）',
+          '美食节定制礼盒',
+          '项目冠名权（可选）',
+          '优先参与后续活动'
+        ],
+        foodCouponValue: 650,
+        priorityExperience: '专属休息区',
+        souvenir: '定制礼盒'
+      },
+      {
+        amount: 1000,
+        rewards: [
+          '价值1300元的美食节通用券',
+          '顶级VIP体验（专属服务）',
+          '美食节限量版纪念品套装',
+          '重要项目冠名权',
+          '与主办方共同策划下一界活动'
+        ],
+        foodCouponValue: 1300,
+        priorityExperience: '专属服务',
+        souvenir: '限量版纪念品套装'
+      }
+    ];
+    
+    function setInvestment(amount) {
+      document.getElementById('investment').value = amount;
+      calculateReturn();
+    }
+    
+    function calculateReturn() {
+      const investmentInput = document.getElementById('investment');
+      const investment = parseFloat(investmentInput.value);
+      const resultDiv = document.getElementById('returnResult');
+      
+      if (!isNaN(investment) && investment > 0) {
+        // 找到最接近但不超过投资金额的回报方案
+        let closestTier = returnTiers[0];
+        for (const tier of returnTiers) {
+          if (tier.amount <= investment && tier.amount > closestTier.amount) {
+            closestTier = tier;
+          }
+        }
+        
+        // 显示结果
+        resultDiv.classList.remove('hidden');
+        document.getElementById('selectedTierAmount').textContent = closestTier.amount;
+        document.getElementById('foodCouponValue').textContent = '¥' + closestTier.foodCouponValue;
+        document.getElementById('priorityExperience').textContent = closestTier.priorityExperience;
+        document.getElementById('souvenir').textContent = closestTier.souvenir;
+        
+        // 计算收益率
+        const returnRate = (closestTier.foodCouponValue / investment) * 100;
+        document.getElementById('totalReturnRate').textContent = returnRate.toFixed(1) + '%';
+        
+        // 显示奖励列表
+        const rewardsList = document.getElementById('rewardsList');
+        rewardsList.innerHTML = '';
+        closestTier.rewards.forEach(reward => {
+          const li = document.createElement('li');
+          li.className = 'flex items-center text-blue-700';
+          li.innerHTML = `<i class="fas fa-check-circle text-green-500 mr-2"></i> ${reward}`;
+          rewardsList.appendChild(li);
+        });
+      } else {
+        resultDiv.classList.add('hidden');
+      }
+    }
+    
+    function supportProject() {
+      const investmentInput = document.getElementById('investment');
+      const investment = parseFloat(investmentInput.value);
+      
+      if (investment && investment > 0) {
+        alert('感谢您的支持！我们将引导您完成支付流程。');
+      } else {
+        alert('请先输入投资金额');
+      }
+    }
+  </script>
+</body>
+</html>
+</html>
