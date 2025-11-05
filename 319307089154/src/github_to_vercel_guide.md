@@ -57,10 +57,11 @@ git push -u origin master
 
 ### 子步骤2.3：配置部署设置
 1. 在配置页面，确保以下设置正确（这是项目能够成功部署的关键！）：
-   - **Framework Preset**: 选择`Vite`
-   - **Build Command**: 保持为`npm run build`
-   - **Output Directory**: 保持为`dist`
-   - **Install Command**: 保持为`npm install`
+    - **Framework Preset**: 选择`Vite`
+    - **Build Command**: 保持为`npm run build`
+    - **Output Directory**: 保持为`dist`
+    - **Install Command**: 保持为`npm install`
+    - 确认项目根目录中有`vercel.json`文件（这是解决路由问题的关键！）
 2. 向下滚动页面，检查是否有其他需要配置的选项（通常保持默认即可）
 3. 确认所有设置正确后，点击"Deploy"按钮
 
@@ -78,9 +79,10 @@ git push -u origin master
 ### 问题1：部署后网站显示白屏或路由不正常
 
 **解决方案：**
-1. 这通常是SPA（单页应用）路由配置问题
-2. 本项目已经在代码中优化了配置，确保SPA路由正常工作
-3. 如果仍然遇到问题，可以尝试在Vercel控制台中添加重写规则：
+这是SPA（单页应用）路由配置问题，我已经为您添加了`vercel.json`文件来自动解决这个问题。请确保：
+1. `vercel.json`文件已经上传到您的GitHub仓库
+2. 重新部署项目，Vercel会自动应用路由重写规则
+3. 如果问题仍然存在，可以在Vercel控制台中手动添加重写规则：
    - 登录Vercel控制台，选择您的项目
    - 点击"Settings" -> "Domains" -> "Redirects"
    - 添加一条规则：
